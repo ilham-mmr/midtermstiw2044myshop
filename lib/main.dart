@@ -32,7 +32,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProductProvider>(context, listen: false).getProducts();
-
+    print('hi');
     return Scaffold(
       appBar: AppBar(
         title: Text('My Shop'),
@@ -41,7 +41,7 @@ class MyHomePage extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Consumer<ProductProvider>(builder: (context, product, _) {
           List<Product> productList = product.productList;
-          productList.forEach((element) => print(element.productName));
+          // productList.forEach((element) => print(element.productName));
           return GridView.builder(
             itemCount: product.productList.length,
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

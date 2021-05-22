@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 class Product {
   String productName, productType, pictureUrl, image64;
   double price;
-  int quantity;
+  int productId, quantity;
 
   Product({this.productName, this.productType, this.price, this.quantity});
 
   Product.fromJson(json) {
+    productId = json['productId'];
     productName = json['productName'];
     productType = json['productType'];
     price = json['price'].toDouble();
@@ -44,6 +45,18 @@ class ProductProvider with ChangeNotifier {
       'price': product.price.toString(),
       'quantity': product.quantity.toString(),
       'encoded_base64string': base64Image,
+    });
+    if (response.body == 'success') {
+      getProducts();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> deleteProduct(int productId) async {
+    var url = Uri.parse('http://192.168.18.4/myshop/php/deleteproduct.php');
+    var response = await http.post(url, body: {
+      'productId': productId.toString(),
     });
     if (response.body == 'success') {
       getProducts();
