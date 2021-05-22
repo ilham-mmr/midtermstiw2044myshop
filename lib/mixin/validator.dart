@@ -14,6 +14,9 @@ mixin Validator {
     if (parsedValue != null && parsedValue <= 0) {
       return 'The price should be greater than 0';
     }
+    if (parsedValue == null) {
+      return 'The price should a whole number';
+    }
     return null;
   }
 
