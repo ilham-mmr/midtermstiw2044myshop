@@ -3,19 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:midtermstiw2044myshop/product.dart';
-import 'package:midtermstiw2044myshop/validator.dart';
+import 'package:midtermstiw2044myshop/models/product.dart';
+import 'package:midtermstiw2044myshop/mixin/validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-class NewProduct extends StatefulWidget {
+class EditProductScreen extends StatefulWidget {
+  final Product product;
+  EditProductScreen({this.product});
   @override
-  _NewProductState createState() => _NewProductState();
+  _EditProductScreenState createState() => _EditProductScreenState();
 }
 
-class _NewProductState extends State<NewProduct> with Validator {
+class _EditProductScreenState extends State<EditProductScreen> with Validator {
   double screenHeight, screenWidth;
 
   File _image;
@@ -31,10 +33,12 @@ class _NewProductState extends State<NewProduct> with Validator {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    Product product = widget.product;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add New Product',
+          'Edit Product',
         ),
       ),
       body: SafeArea(
@@ -55,6 +59,7 @@ class _NewProductState extends State<NewProduct> with Validator {
                       child: Column(
                         children: [
                           TextFormField(
+                            initialValue: product.productName,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -73,6 +78,7 @@ class _NewProductState extends State<NewProduct> with Validator {
                             height: 18,
                           ),
                           TextFormField(
+                            initialValue: product.productType,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -91,6 +97,7 @@ class _NewProductState extends State<NewProduct> with Validator {
                             height: 18,
                           ),
                           TextFormField(
+                            initialValue: product.price.toString(),
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -111,6 +118,7 @@ class _NewProductState extends State<NewProduct> with Validator {
                             height: 18,
                           ),
                           TextFormField(
+                            initialValue: product.quantity.toString(),
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -137,10 +145,10 @@ class _NewProductState extends State<NewProduct> with Validator {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      _submit(context);
+                      _update(context);
                     },
                     child: Text(
-                      'Submit',
+                      'Update',
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
@@ -170,7 +178,7 @@ class _NewProductState extends State<NewProduct> with Validator {
               alignment: Alignment.center,
               children: [
                 _image == null
-                    ? Image.asset('images/noimage.png')
+                    ? Image.network(widget.product.pictureUrl)
                     : Image.file(_image),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -180,7 +188,7 @@ class _NewProductState extends State<NewProduct> with Validator {
                         borderRadius: BorderRadius.circular(20)),
                     child: IconButton(
                         color: Colors.white,
-                        icon: Icon(_image == null ? Icons.add : Icons.repeat),
+                        icon: Icon(Icons.repeat),
                         onPressed: () {
                           _showModalImagePicker(context);
                         }),
@@ -272,10 +280,10 @@ class _NewProductState extends State<NewProduct> with Validator {
 
     if (pickedFile != null) {
       _image = File(pickedFile.path);
+      _cropImage();
     } else {
       print('No image selected.');
     }
-    _cropImage();
   }
 
   _chooseCamera() async {
@@ -288,10 +296,10 @@ class _NewProductState extends State<NewProduct> with Validator {
 
     if (pickedFile != null) {
       _image = File(pickedFile.path);
+      _cropImage();
     } else {
       print('No image selected.');
     }
-    _cropImage();
   }
 
   _cropImage() async {
@@ -331,7 +339,7 @@ class _NewProductState extends State<NewProduct> with Validator {
     return false;
   }
 
-  void _submit(BuildContext context) async {
+  void _update(BuildContext context) async {
     if (_formKey.currentState.validate() || !_isImageEmpty()) {
       _formKey.currentState.save();
       Product product = Product(
@@ -345,7 +353,7 @@ class _NewProductState extends State<NewProduct> with Validator {
       });
       bool isCreated =
           await Provider.of<ProductProvider>(context, listen: false)
-              .addProduct(product, _image);
+              .updateProduct(widget.product.productId, product, _image);
       setState(() {
         _isLoading = false;
       });
