@@ -68,7 +68,10 @@ class _ProductCardState extends State<ProductCard> {
             ),
             Text(
               widget.product.productName,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
             Text('type: ${widget.product.productType}'),
             Text('RM ${widget.product.price.toString()}'),
