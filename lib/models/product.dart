@@ -47,6 +47,7 @@ class ProductProvider with ChangeNotifier {
       'encoded_base64string': base64Image,
     });
     if (response.body == 'success') {
+      print('adding product is successfull');
       getProducts();
       return true;
     }
@@ -59,6 +60,8 @@ class ProductProvider with ChangeNotifier {
       'productId': productId.toString(),
     });
     if (response.body == 'success') {
+      print('deleting product is successfull');
+
       getProducts();
       return true;
     }
@@ -85,6 +88,8 @@ class ProductProvider with ChangeNotifier {
 
     var response = await http.post(url, body: body);
     if (response.body == 'success') {
+      print('updating product is successfull');
+
       getProducts();
       return true;
     }
