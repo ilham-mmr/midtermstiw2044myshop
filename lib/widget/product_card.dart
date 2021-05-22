@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:midtermstiw2044myshop/editproduct.dart';
 import 'package:midtermstiw2044myshop/product.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class _ProductCardState extends State<ProductCard> {
                 PopupMenuButton(
                   onSelected: (value) {
                     if (value == 0) {
-                      print('edit');
+                      _editProduct(context);
                     }
                     if (value == 1) {
                       _deleteProduct(context);
@@ -96,9 +97,27 @@ class _ProductCardState extends State<ProductCard> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: 16.0);
+    } else {
+      Fluttertoast.showToast(
+          msg: "failed to delete ${widget.product.productName}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void _editProduct(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditProduct(
+          product: widget.product,
+        ),
+      ),
+    );
   }
 }

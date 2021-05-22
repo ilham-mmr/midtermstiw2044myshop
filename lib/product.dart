@@ -64,4 +64,30 @@ class ProductProvider with ChangeNotifier {
     }
     return false;
   }
+
+  Future<bool> updateProduct(
+      int productId, Product product, File imageFile) async {
+    var url = Uri.parse('http://192.168.18.4/myshop/php/updateproduct.php');
+    Map body = {
+      'productId': productId.toString(),
+      'productName': product.productName,
+      'productType': product.productType,
+      'price': product.price.toString(),
+      'quantity': product.quantity.toString(),
+    };
+
+    // if image is updated
+    if (imageFile != null) {
+      String base64Image = base64Encode(imageFile.readAsBytesSync());
+      // add base64string to body
+      body['encoded_base64string'] = base64Image;
+    }
+
+    var response = await http.post(url, body: body);
+    if (response.body == 'success') {
+      getProducts();
+      return true;
+    }
+    return false;
+  }
 }
