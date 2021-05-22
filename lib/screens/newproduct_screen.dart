@@ -318,21 +318,22 @@ class _NewProductScreenState extends State<NewProductScreen> with Validator {
   }
 
   bool _isImageEmpty() {
-    if (_image != null) {
+    if (_image == null) {
+       Fluttertoast.showToast(
+          msg: "Please add a product image",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
       return true;
     }
-    Fluttertoast.showToast(
-        msg: "Please add a product image",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        fontSize: 16.0);
+
     return false;
   }
 
   void _submit(BuildContext context) async {
-    if (_formKey.currentState.validate() || !_isImageEmpty()) {
+    if (_formKey.currentState.validate() && !_isImageEmpty()) {
       _formKey.currentState.save();
       Product product = Product(
           productName: _productName,
