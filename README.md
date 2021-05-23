@@ -4,7 +4,7 @@ My shop App
 
 ## Getting Started
 
-This project is a midterm assignment for class stiw2044
+This project is a midterm assignment for class stiw2044. This app is a simple CRUD app.
 
 ## Project Information
 
